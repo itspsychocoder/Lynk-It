@@ -35,6 +35,11 @@ export default function LinktreeClone() {
     return "🌙 Late-night grinding on Reflecto.";
   };
 
+  const track = (data) => {
+    console.log(`Tracking.. data: `, data);
+    trackEvent(data);
+  }
+
   return (
     <div className={`min-h-screen flex flex-col items-center justify-center p-6 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
       {/* Profile Section */}
@@ -55,7 +60,7 @@ export default function LinktreeClone() {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={trackEvent({ action: "click", category: "link", label: title })}
+            onClick={()=>track({ action: "click", category: "link", label: title })}
             className="block text-center p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all my-2"
             >
             {title}
