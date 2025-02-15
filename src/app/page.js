@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image";
 import { useState, useEffect } from "react";
-
+import {trackEvent} from "@/utils/analytics"
 export default function LinktreeClone() {
   const [darkMode, setDarkMode] = useState(false);
   const [quote, setQuote] = useState("");
@@ -48,6 +48,8 @@ export default function LinktreeClone() {
       {/* Links Section */}
       <div className="mt-6 w-full max-w-xs">
         {links.map(({ title, url }) => (
+          <button onClick={trackEvent({ action: "click", category: "link", label: title })}>
+
           <a
             key={title}
             href={url}
@@ -55,9 +57,10 @@ export default function LinktreeClone() {
             rel="noopener noreferrer"
             onClick={() => handleClick(title)}
             className="block text-center p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all my-2"
-          >
+            >
             {title}
           </a>
+            </button>
         ))}
       </div>
 
