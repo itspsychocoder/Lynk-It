@@ -1,101 +1,154 @@
+"use client"
 import Image from "next/image";
+import { useState, useEffect } from "react";
 
-export default function Home() {
+export default function LinktreeClone() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [quote, setQuote] = useState("");
+  const [author, setAuthor] = useState("");
+  const getQuote = async () => {
+    const response = await fetch("/api/quote/get-quote"); // Call your own API
+    const data = await response.json();
+    console.log(data[0].q); // Access quote text
+    setQuote(data[0].q); // Set quote state
+    console.log(data[0].a); // Access quote text
+    setAuthor(data[0].a); // Set author state
+
+  };
+  
+
+
+  useEffect(() => {
+    getQuote();
+  }, []);
+
+  const links = [
+    { title: "GitHub", url: "https://github.com/itspsychocoder" },
+    { title: "Blog", url: "https://psychocoder.hashnode.dev" },
+    { title: "Instagram", url: "https://instagram.com/phobic.psycho" },
+  ];
+
+  const getStatusMessage = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "☀️ Good morning! Check out my latest project.";
+    if (hour < 18) return "🚀 Afternoon coding session in progress.";
+    return "🌙 Late-night grinding on Reflecto.";
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className={`min-h-screen flex flex-col items-center justify-center p-6 ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
+      {/* Profile Section */}
+      <img src="/avatar.webp" alt="Profile" className="rounded-full w-24 h-24 mb-4" />
+      <div className="text-center">
+        <h1 className="text-2xl font-bold">Hussnain Ahmad</h1>
+        <p className="text-sm opacity-75">Full Stack Web Developer | Tech Enthusiast</p>
+        <p className="mt-2 text-xs font-medium">{quote} - {author}</p>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
+      {/* Links Section */}
+      <div className="mt-6 w-full max-w-xs">
+        {links.map(({ title, url }) => (
           <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            key={title}
+            href={url}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => handleClick(title)}
+            className="block text-center p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all my-2"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+            {title}
           </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        ))}
+      </div>
+
+      {/* Dark Mode Toggle */}
+      <button
+        onClick={() => setDarkMode(!darkMode)}
+        className="mt-4 px-4 py-2 text-sm bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-all"
+      >
+        {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+      </button>
+
+      <div className="mt-6 w-full max-w-xs">
+  <h1 className="text-center text-3xl my-5 font-bold">Currently Reading</h1>
+  
+  <div className="flex flex-col items-center bg-blue-600 text-white rounded-lg p-5 hover:bg-blue-700 transition-all shadow-lg">
+    {/* Book Image */}
+    <Image className="mt-3 rounded-md" width={120} height={120} src="/book.jpg" alt="Book Cover" />
+    
+    {/* Book Title */}
+    <h2 className="text-center text-2xl font-bold mt-4">
+      The Almanack Of Naval Ravikant
+    </h2>
+
+    {/* Book Badges */}
+    <div className="flex gap-2 mt-3 flex-wrap justify-center">
+      <span className="bg-gray-200 text-gray-800 px-3 py-1 text-sm rounded-full">Philosophy</span>
+      <span className="bg-gray-200 text-gray-800 px-3 py-1 text-sm rounded-full">Wealth</span>
+      <span className="bg-gray-200 text-gray-800 px-3 py-1 text-sm rounded-full">Mindset</span>
+    </div>
+  </div>
+</div>
+
+
+<div className="mt-6 w-full max-w-xs">
+  <h1 className="text-center text-3xl my-5 font-bold">Current Project</h1>
+
+  <div className="flex flex-col items-center bg-gray-900 text-white rounded-lg p-5 hover:bg-gray-800 transition-all shadow-lg">
+
+    {/* Project Name & Status */}
+    <h2 className="text-center text-2xl font-bold">Lynk It</h2>
+    <span className="text-sm text-gray-300 mt-1 px-3 py-1 bg-blue-600 rounded-full">In Progress 🚀</span>
+
+
+    {/* Project Description */}
+    <p className="text-center text-sm text-gray-300 mt-2">
+      A minimal one-page hub for all my links, projects, and content.
+    </p>
+
+    {/* Project Badges */}
+    <div className="flex gap-2 mt-3 flex-wrap justify-center">
+      <span className="bg-gray-200 text-gray-800 px-3 py-1 text-sm rounded-full">Next JS</span>
+      <span className="bg-gray-200 text-gray-800 px-3 py-1 text-sm rounded-full">Node</span>
+      <span className="bg-gray-200 text-gray-800 px-3 py-1 text-sm rounded-full">AWS</span>
+    </div>
+
+      {/* Key Features */}
+      <ul className="text-sm text-gray-400 mt-4 list-disc list-inside">
+      <li>Personalized link hub</li>
+      <li>Minimal & responsive design</li>
+      <li>Customizable link categories</li>
+    </ul>
+
+    {/* Progress Bar */}
+    <div className="w-full bg-gray-700 rounded-full h-2.5 mt-4">
+      <div className="bg-blue-500 h-2.5 rounded-full" style={{ width: "70%" }}></div>
+    </div>
+    <span className="text-xs text-gray-300 mt-1">70% Complete</span>
+
+    {/* Call to Action Buttons */}
+    <div className="mt-5 flex gap-3">
+      <a 
+        href="https://lynkit.example.com" 
+        target="_blank"
+        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all text-sm"
+      >
+        View Project
+      </a>
+      <a 
+        href="https://github.com/yourrepo" 
+        target="_blank"
+        className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-all text-sm"
+      >
+        GitHub Repo
+      </a>
+    </div>
+
+    {/* Release Date (Optional) */}
+    <p className="text-xs text-gray-400 mt-4">Planned Release: March 2025</p>
+  </div>
+</div>
+
     </div>
   );
 }
